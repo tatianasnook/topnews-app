@@ -20,7 +20,9 @@ export default function HomeScreen ({ navigation }) {
       try {
         const response = await fetch("https://newsapi.org/v2/top-headlines?country=us&apiKey=935e38d3c77a4cc4963639e61b2f1379");
         const data = await response.json();
-        setItems(data.articles);
+        const filteredArticles = data.articles.filter(article => article.status !== "removed");
+
+        setItems(filteredArticles);
       } catch (error) {
         console.error("Error fetching news:", error);
       } finally {
@@ -54,7 +56,7 @@ export default function HomeScreen ({ navigation }) {
       <FlatList 
         data={items}
         renderItem={({item}) => (
-          <TouchableOpacity onPress={() => navigation.navigate('FullPost', {title: item.title, image: item.urlToImage, content: item.content})}>
+          <TouchableOpacity onPress={() => navigation.navigate('FullPost', { title: item.title, image: item.urlToImage, content: item.content, url: item.url})}>
             <Post 
               title={item.title}
               imageUrl={item.urlToImage}
